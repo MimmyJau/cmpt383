@@ -11,6 +11,7 @@ third_a  list = list !! 2
 third_b :: [a] -> a
 third_b list = head(tail(tail(list)))
 
+
 -- Recursive factorial function.
 factorial :: Int -> Int
 factorial a
@@ -23,6 +24,7 @@ hailstone :: Int -> Int
 hailstone n 
     | even n    = n `div` 2
     | otherwise = 3 * n  + 1
+
 
 -- Hailstone length (# of hailstone operations until we get 1).
 hailLen :: Int -> Int
