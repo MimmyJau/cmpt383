@@ -4,8 +4,14 @@ import RainbowAssign
 
 
 -- CONSTANTS
+pwLength :: Int
 pwLength = 8
+
+nLetters :: Int
 nLetters = 5
+
+width :: Int
+width = 40
 
 
 -- Takes a hash in base 10 and converts to base n.
