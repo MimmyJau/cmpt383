@@ -1,3 +1,5 @@
+import qualified Data.Map as Map
+
 import RainbowAssign
 
 
@@ -33,18 +35,38 @@ pwReduce :: Hash -> Passwd
 pwReduce = digToLet . lenLeastSig pwLength . convertBase nLetters 
 
 
+-- Recursively apply hash + reduce to create chain.
+-- 1) Edge condition applies hash once to password (i.e. n = 0).
+-- 2) Recursion applies reduce then hash to the keys. 
+-- Note: Data structure is funky in that the hash is in the key position 
+-- and the password is in the value position. This is so that we can
+-- more easily lookup the hash, but it's intuitive cause we don't typically
+-- picture a chain "going" from right-to-left.
+rainbowTable :: Int -> [Passwd] -> Map.Map Hash Passwd
+rainbowTable 0 xs = Map.fromList $ zip hashes xs
+    where hashes = map hashString xs
+rainbowTable n xs = Map.mapKeys (hashString. pwReduce) (rainbowTable (n - 1) xs) 
+
+
 main :: IO ()
 main = do
     {-
+    -- Test RainbowAssign functions
     pw <- randomPasswords 5 5 10
     print pw
     let hw = map pwHash pw
     print hw
     let rw = map (pwReduce 5 8)  hw
     print rw
-    -}
+
+    -- Test reduce
     putStrLn "base: " 
     nLetters <- getLine
     putStrLn "hash: " 
     hash <- getLine
     print (pwReduce (read hash))
+    -}
+
+    -- Test rainbowTable
+    print (rainbowTable 40 ["abcdeabc", "aabbccdd", "eeeeeeee"])
+    print (rainbowTable 2 ["dccdecee","cdeccaed","acbcaeec","eeeeaebd","ccdccbeb"])
