@@ -70,3 +70,4 @@ main = do
     -- Test rainbowTable
     print (rainbowTable 40 ["abcdeabc", "aabbccdd", "eeeeeeee"])
     print (rainbowTable 2 ["dccdecee","cdeccaed","acbcaeec","eeeeaebd","ccdccbeb"])
+    print (rainbowTable width ["acdgcddh","fcfeggeh","ebfeecbe"])
