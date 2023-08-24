@@ -55,6 +55,10 @@ rainbowTable n xs = Map.mapKeys (hashString. pwReduce) (rainbowTable (n - 1) xs)
 
 
 
+generateTable :: IO ()
+generateTable = do
+    table <- buildTable rainbowTable nLetters pwLength width height
+    writeTable table filename
 
 
 main :: IO ()
