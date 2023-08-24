@@ -4,14 +4,14 @@ import RainbowAssign
 
 
 -- CONSTANTS
-pwLength :: Int
+pwLength, nLetters, width, height :: Int
+filename :: FilePath
+
 pwLength = 8
-
-nLetters :: Int
 nLetters = 5
-
-width :: Int
 width = 40
+height = 1000
+filename = "table.txt"
 
 
 -- Takes a hash in base 10 and converts to base n.
@@ -52,6 +52,9 @@ rainbowTable :: Int -> [Passwd] -> Map.Map Hash Passwd
 rainbowTable 0 xs = Map.fromList $ zip hashes xs
     where hashes = map hashString xs
 rainbowTable n xs = Map.mapKeys (hashString. pwReduce) (rainbowTable (n - 1) xs) 
+
+
+
 
 
 main :: IO ()
