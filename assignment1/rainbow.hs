@@ -88,10 +88,12 @@ findChains table count hash  = filter (/= Nothing) (checkRows count hash)
 -- Safely grab head from a [Maybe a] list type.
 -- There is not way of safely grabbibg head. Will lead to a runtime error if list is empty.
 -- This adds extra pattern of distinguishing Nothing from Just.
-mySafeHead :: [Maybe a] -> Maybe a
-mySafeHead [] = Nothing
-mySafeHead (Nothing:xs) = mySafeHead xs
-mySafeHead (Just a:_) = Just a
+-- There is no way of safely grabbing head. Throws a runtime error if list is empty.
+-- This function adds extra pattern of distinguishing Nothing from Just.
+maybeHead :: [Maybe a] -> Maybe a
+maybeHead [] = Nothing
+maybeHead (Nothing:xs) = maybeHead xs
+maybeHead (Just a:_) = Just a
 
 
 -- Tries to find password in rainbow table.
