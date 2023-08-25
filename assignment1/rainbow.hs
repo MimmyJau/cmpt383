@@ -1,6 +1,5 @@
 import qualified Data.Map as Map
 import qualified Data.Maybe as Maybe
-import Debug.Trace
 
 import RainbowAssign
 
@@ -96,14 +95,6 @@ mySafeHead (Just a:_) = Just a
 -- Tries to find password in rainbow table.
 findPassword :: Map.Map Hash Passwd -> Int -> Hash -> Maybe Passwd
 findPassword table w hash = mySafeHead $ map (findNode w hash) (findChains table w hash) 
-
-
--- Prints every node in chain for debugging purposes.
-debugger :: Passwd -> Int -> Hash
-debugger p 0 = trace (show p ++ "," ++ show h) $ hashString p
-    where h = hashString p
-debugger p n = trace (show p ++ "," ++ show h) debugger ((pwReduce . hashString) p) (n - 1)
-    where h = hashString p
 
 
 test2 :: Int -> IO ([Passwd], Int)
