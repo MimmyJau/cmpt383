@@ -17,7 +17,7 @@ filename = "table.txt"
 -- Takes a hash in base 10 and converts to base n.
 -- e.g. 1726491528 (base 10 integer) -> 12013440212103 (base 5 integer)
 convertBase :: Int -> Hash -> [String]
-convertBase 0 _        = ["0"]
+convertBase 0 _       = ["0"]
 convertBase base hash = show remainder : convertBase base quotient
     where
         remainder = hash `mod` fromIntegral base
