@@ -61,6 +61,42 @@ generateTable = do
     writeTable table filename
 
 
+-- Find column in rainbow table.
+-- Note: Only called if findChain finds a match.
+findNode :: Int -> Passwd -> Hash -> Maybe Passwd
+findNode width pass hash
+    | width < 0 = Nothing
+    | otherwise = if hashString pass == hash
+                    then Just pass
+                    else findNode (width - 1) ((pwReduce . hashString) pass) hash
+
+
+-- Find row in rainbow table.
+-- Note: Trickier since we don't know "a priori" how many recurses it will take.
+-- Note: There may be collisions, so table should check every chain that matches.
+findChain :: Map.Map Hash Passwd -> Int -> Hash -> Maybe Passwd
+findChain rainbowTable width hash 
+    | width == 0 = Map.lookup hash rainbowTable
+    | otherwise  = case Map.lookup hash rainbowTable of 
+                     Nothing -> findChain rainbowTable (width - 1) ((hashString . pwReduce) hash)
+                     Just value -> case findNode width value hash of 
+                                   Nothing -> findChain rainbowTable (width - 1) ((hashString . pwReduce) hash)
+                                   Just p -> Just p
+
+
+-- Gets table
+-- Lookup hash in table
+-- If found, done.
+-- If not, reduce + hash. Repeat lookup.
+-- If found, get password.
+-- Reduce + hash until you find the hash. 
+    -- Function should return previous passwd iter.
+
+-- Tries to find password in rainbow table.
+findPassword :: Map.Map Hash Passwd -> Int -> Hash -> Maybe Passwd
+findPassword = findChain
+
+
 main :: IO ()
 main = do
     {-
