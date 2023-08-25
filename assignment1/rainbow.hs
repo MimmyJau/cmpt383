@@ -80,8 +80,8 @@ findChain rainbowTable width hash
     | otherwise  = case Map.lookup hash rainbowTable of 
                      Nothing -> findChain rainbowTable (width - 1) ((hashString . pwReduce) hash)
                      Just value -> case findNode width value hash of 
-                                   Nothing -> findChain rainbowTable (width - 1) ((hashString . pwReduce) hash)
-                                   Just p -> Just p
+                                      Nothing -> findChain rainbowTable (width - 1) ((hashString . pwReduce) hash)
+                                      Just p -> Just p
 
 
 -- Gets table
