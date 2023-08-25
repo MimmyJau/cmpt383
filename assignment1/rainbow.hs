@@ -97,6 +97,7 @@ findPassword :: Map.Map Hash Passwd -> Int -> Hash -> Maybe Passwd
 findPassword table w hash = mySafeHead $ map (findNode w hash) (findChains table w hash) 
 
 
+-- Tests pre-generated against n number of passwords.
 test2 :: Int -> IO ([Passwd], Int)
 test2 n = do
   table <- readTable filename
