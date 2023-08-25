@@ -1,4 +1,5 @@
 import qualified Data.Map as Map
+import qualified Data.Maybe as Maybe
 import Debug.Trace
 
 import RainbowAssign
@@ -10,8 +11,8 @@ filename :: FilePath
 
 pwLength = 8
 nLetters = 5
-width = 40 
-height = 1000
+width = 40
+height = 10000
 filename = "table.txt"
 
 
@@ -97,6 +98,7 @@ findPassword :: Map.Map Hash Passwd -> Int -> Hash -> Maybe Passwd
 findPassword table w hash = mySafeHead $ map (findNode w hash) (findChains table w hash) 
 
 
+-- Prints every node in chain for debugging purposes.
 debugger :: Passwd -> Int -> Hash
 debugger p 0 = trace (show p ++ "," ++ show h) $ hashString p
     where h = hashString p
@@ -104,31 +106,21 @@ debugger p n = trace (show p ++ "," ++ show h) debugger ((pwReduce . hashString)
     where h = hashString p
 
 
+test2 :: Int -> IO ([Passwd], Int)
+test2 n = do
+  table <- readTable filename
+  pws <- randomPasswords nLetters pwLength n
+  let hs = map pwHash pws
+  let result = Maybe.mapMaybe (findPassword table width) hs
+  return (result, length result)
+
+
 main :: IO ()
 main = do
-    {-
-    -- Test RainbowAssign functions
-    pw <- randomPasswords 5 5 10
-    print pw
-    let hw = map pwHash pw
-    print hw
-    let rw = map (pwReduce 5 8)  hw
-    print rw
-
-    -- Test reduce
-    putStrLn "base: " 
-    nLetters <- getLine
-    putStrLn "hash: " 
-    hash <- getLine
-    print (pwReduce (read hash))
-    -}
-
-    -- Test rainbowTable
-    print (rainbowTable 40 ["abcdeabc", "aabbccdd", "eeeeeeee"])
-    print (rainbowTable 2 ["dccdecee","cdeccaed","acbcaeec","eeeeaebd","ccdccbeb"])
-    print (rainbowTable width ["acdgcddh","fcfeggeh","ebfeecbe"])
+    generateTable
+    res <- test2 10000
+    print res
 
     
 
-    -- Test writeTable
 
