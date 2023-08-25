@@ -77,10 +77,12 @@ findNode w hash (Just pass)
 -- Find all matching rows in rainbow table.
 -- Note: There may be collisions, so table should check every chain that matches.
 findChains :: Map.Map Hash Passwd -> Int -> Hash -> [Maybe Passwd]
-findChains table n hash  = filter (/= Nothing) (checkRows table n hash)
+findChains table count hash  = filter (/= Nothing) (checkRows count hash)
     where 
-        checkRows table 0 hash = [Map.lookup hash table]
-        checkRows table n hash = Map.lookup hash table : checkRows table (n - 1) ((hashString . pwReduce) hash)
+        checkRows 0 h = [Map.lookup h table]
+        checkRows n h = 
+            let nextHash = (hashString . pwReduce) h
+            in Map.lookup h table : checkRows (n - 1) nextHash
 
 
 -- Safely grab head from a [Maybe a] list type.
