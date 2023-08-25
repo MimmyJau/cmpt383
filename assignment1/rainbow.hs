@@ -64,38 +64,37 @@ generateTable = do
 
 -- Find column in rainbow table.
 -- Note: Only called if findChain finds a match.
-findNode :: Int -> Passwd -> Hash -> Maybe Passwd
-findNode width pass hash
-    | width < 0 = Nothing
+findNode :: Int -> Hash -> Maybe Passwd -> Maybe Passwd
+findNode _ _ Nothing = Nothing
+findNode w hash (Just pass)
+    | w < 0     = Nothing
     | otherwise = if hashString pass == hash
                     then Just pass
-                    else findNode (width - 1) ((pwReduce . hashString) pass) hash
+                    else findNode (w - 1) hash ((Just . pwReduce . hashString) pass)
 
 
--- Find row in rainbow table.
--- Note: Trickier since we don't know "a priori" how many recurses it will take.
+
+-- Find all matching rows in rainbow table.
 -- Note: There may be collisions, so table should check every chain that matches.
-findChain :: Map.Map Hash Passwd -> Int -> Hash -> Maybe Passwd
-findChain rainbowTable n hash 
-    | n == 0     = Map.lookup hash rainbowTable
-    | otherwise  = case Map.lookup hash rainbowTable of 
-                     Nothing -> findChain rainbowTable (n - 1) ((hashString . pwReduce) hash)
-                     Just value -> case trace (show width ++ show value ++ show hash) $ findNode width value hash of 
-                                      Nothing -> findChain rainbowTable (n - 1) ((hashString . pwReduce) hash)
-                                      Just p -> Just p
+findChains :: Map.Map Hash Passwd -> Int -> Hash -> [Maybe Passwd]
+findChains table n hash  = filter (/= Nothing) (checkRows table n hash)
+    where 
+        checkRows table 0 hash = [Map.lookup hash table]
+        checkRows table n hash = Map.lookup hash table : checkRows table (n - 1) ((hashString . pwReduce) hash)
 
 
--- Gets table
--- Lookup hash in table
--- If found, done.
--- If not, reduce + hash. Repeat lookup.
--- If found, get password.
--- Reduce + hash until you find the hash. 
-    -- Function should return previous passwd iter.
+-- Safely grab head from a [Maybe a] list type.
+-- There is not way of safely grabbibg head. Will lead to a runtime error if list is empty.
+-- This adds extra pattern of distinguishing Nothing from Just.
+mySafeHead :: [Maybe a] -> Maybe a
+mySafeHead [] = Nothing
+mySafeHead (Nothing:xs) = mySafeHead xs
+mySafeHead (Just a:_) = Just a
+
 
 -- Tries to find password in rainbow table.
 findPassword :: Map.Map Hash Passwd -> Int -> Hash -> Maybe Passwd
-findPassword = findChain
+findPassword table w hash = mySafeHead $ map (findNode w hash) (findChains table w hash) 
 
 
 debugger :: Passwd -> Int -> Hash
