@@ -54,7 +54,7 @@ rainbowTable 0 xs = Map.fromList $ zip hashes xs
 rainbowTable n xs = Map.mapKeys (hashString. pwReduce) (rainbowTable (n - 1) xs) 
 
 
-
+-- Creates and saves table to file.
 generateTable :: IO ()
 generateTable = do
     table <- buildTable rainbowTable nLetters pwLength width height
