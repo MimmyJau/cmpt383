@@ -1,4 +1,5 @@
 import qualified Data.Map as Map
+import Debug.Trace
 
 import RainbowAssign
 
@@ -9,7 +10,7 @@ filename :: FilePath
 
 pwLength = 8
 nLetters = 5
-width = 40
+width = 40 
 height = 1000
 filename = "table.txt"
 
@@ -75,12 +76,12 @@ findNode width pass hash
 -- Note: Trickier since we don't know "a priori" how many recurses it will take.
 -- Note: There may be collisions, so table should check every chain that matches.
 findChain :: Map.Map Hash Passwd -> Int -> Hash -> Maybe Passwd
-findChain rainbowTable width hash 
-    | width == 0 = Map.lookup hash rainbowTable
+findChain rainbowTable n hash 
+    | n == 0     = Map.lookup hash rainbowTable
     | otherwise  = case Map.lookup hash rainbowTable of 
-                     Nothing -> findChain rainbowTable (width - 1) ((hashString . pwReduce) hash)
-                     Just value -> case findNode width value hash of 
-                                      Nothing -> findChain rainbowTable (width - 1) ((hashString . pwReduce) hash)
+                     Nothing -> findChain rainbowTable (n - 1) ((hashString . pwReduce) hash)
+                     Just value -> case trace (show width ++ show value ++ show hash) $ findNode width value hash of 
+                                      Nothing -> findChain rainbowTable (n - 1) ((hashString . pwReduce) hash)
                                       Just p -> Just p
 
 
@@ -95,6 +96,13 @@ findChain rainbowTable width hash
 -- Tries to find password in rainbow table.
 findPassword :: Map.Map Hash Passwd -> Int -> Hash -> Maybe Passwd
 findPassword = findChain
+
+
+debugger :: Passwd -> Int -> Hash
+debugger p 0 = trace (show p ++ "," ++ show h) $ hashString p
+    where h = hashString p
+debugger p n = trace (show p ++ "," ++ show h) debugger ((pwReduce . hashString) p) (n - 1)
+    where h = hashString p
 
 
 main :: IO ()
@@ -120,3 +128,8 @@ main = do
     print (rainbowTable 40 ["abcdeabc", "aabbccdd", "eeeeeeee"])
     print (rainbowTable 2 ["dccdecee","cdeccaed","acbcaeec","eeeeaebd","ccdccbeb"])
     print (rainbowTable width ["acdgcddh","fcfeggeh","ebfeecbe"])
+
+    
+
+    -- Test writeTable
+
