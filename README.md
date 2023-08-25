@@ -6,7 +6,7 @@ Notes are [here](https://coursys.sfu.ca/2023su-cmpt-383-d1/pages/).
 
 ## Rainbow Table
 
-To config, can modify these constants in `./rainbow.hs`.
+To config, modify these constants in `./rainbow.hs`.
 ```haskell
 pwLength = 8
 nLetters = 5
@@ -16,8 +16,6 @@ filename = "table.txt"
 ```
 
 To build:
-```haskell
+```console
 ghc --make -Wall ./rainbow.hs
 ```
-
-To r
