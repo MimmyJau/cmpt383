@@ -15,5 +15,12 @@ fn main() {
     let value: u64 = value.trim().parse().expect("NaN");
 
 
-    println!("hailstone sequence is: {:?}", exer7::hailstone(value));
+    println!(
+        "hailstone sequence is: {:?}", 
+        exer7::hailstone_sequence_append(value)
+    );
+    println!(
+        "hailstone sequence is: {:?}", 
+        exer7::hailstone_sequence_prealloc(value)
+    );
 }
