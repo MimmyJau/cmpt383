@@ -1,6 +1,6 @@
 use std::io;
 
-mod exer7;
+mod hailstone;
 
 
 fn main() {
@@ -17,10 +17,10 @@ fn main() {
 
     println!(
         "hailstone sequence is: {:?}", 
-        exer7::hailstone_sequence_append(value)
+        hailstone::hailstone_sequence_append(value)
     );
     println!(
         "hailstone sequence is: {:?}", 
-        exer7::hailstone_sequence_prealloc(value)
+        hailstone::hailstone_sequence_prealloc(value)
     );
 }
