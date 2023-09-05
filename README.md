@@ -1,10 +1,10 @@
-# CMPT383
+# README
 
-Self-study notes from the SFU's CMPT383.
-
-Notes are [here](https://coursys.sfu.ca/2023su-cmpt-383-d1/pages/).
+Self-studying SFU's [CMPT 383: Comparative Programming Languages](https://coursys.sfu.ca/2023su-cmpt-383-d1/pages/).
 
 ## Rainbow Table
+
+Found in `./assignment1` directory.
 
 To config, modify these constants in `./rainbow.hs`.
 ```haskell
