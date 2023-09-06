@@ -1,6 +1,4 @@
 /*
- * Hailstone sequence.
- *
  * Performance: Using criterion performance benchmarks, we found that
  * hailstone_sequence_prealloc performed roughly
  *     ~4x faster on smaller inputs (~100ns vs ~400ns), 
